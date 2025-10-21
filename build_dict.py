@@ -99,6 +99,6 @@ if __name__ == "__main__":
 
         # Print name_to_index dictionary
         print(f"{dict_indent}self.name_to_index = {{")
-        for name, index in sorted(line_dicts['name_to_index'].items(), key=lambda x: x.values(), reverse=True):
+        for name, index in sorted(line_dicts['name_to_index'].items(), key=lambda x: x[1], reverse=True):
             print(f"{dict_entry_indent}{json.dumps(name)}: {index},")
         print(f"{dict_indent}}}")
