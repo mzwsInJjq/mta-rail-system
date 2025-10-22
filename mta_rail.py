@@ -21,11 +21,11 @@ line_to_long_name = {
     "3": "7 Avenue Express",
     "4": "Lexington Avenue Express",
     "5": "Lexington Avenue Express",
-    "5X": "Lexington Avenue Express",
+    # "5X": "Lexington Avenue Express",
     "6": "Lexington Avenue Local",
-    "6X": "Pelham Bay Park Express",
+    # "6X": "Pelham Bay Park Express",
     "7": "Flushing Local",
-    "7X": "Flushing Express",
+    # "7X": "Flushing Express",
     "GS": "42 St Shuttle",
     "A": "8 Avenue Express",
     "B": "6 Avenue Express",
@@ -33,7 +33,7 @@ line_to_long_name = {
     "D": "6 Avenue Express",
     "E": "8 Avenue Local",
     "F": "Queens Blvd Express/ 6 Av Local",
-    "FX": "Brooklyn F Express",
+    # "FX": "Brooklyn F Express",
     "FS": "Franklin Avenue Shuttle",
     "G": "Brooklyn-Queens Crosstown",
     "J": "Nassau St Local",
@@ -170,6 +170,15 @@ class TrainGetter():
         
         # Load mappings for the specified route
         self.route_data = station_data.get(args.route, OrderedDict())
+        if args.route in ['GS', 'FS', 'H']:
+            self.route_data = station_data.get('S', OrderedDict())
+            match args.route:
+                case 'GS':
+                    self.route_data = {'42 St Shuttle (Manhattan)': self.route_data.get('42 St Shuttle (Manhattan)', {})}
+                case 'FS':
+                    self.route_data = {'Franklin Shuttle (Brooklyn)': self.route_data.get('Franklin Shuttle (Brooklyn)', {})}
+                case 'H':
+                    self.route_data = {'Rockaway Shuttle (Queens)': self.route_data.get('Rockaway Shuttle (Queens)', {})}
 
         # --- Precompute helpers from the new nested structure ---
         self.stop_id_to_name = OrderedDict()
@@ -302,7 +311,7 @@ class TrainGetter():
             secondary_sort = train.time_until
 
             # Invert secondary sort based on direction to maintain order within a block
-            secondary_sort *= (1 if is_to_endpoint else -1)
+            secondary_sort *= (1 if is_to_endpoint else 0)
 
             return (primary_sort, secondary_sort)
 
