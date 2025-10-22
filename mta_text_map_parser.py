@@ -131,10 +131,42 @@ for page_url in processed_urls:
             if title and stations:
                 all_lines_data[train_line][title] = stations
 
+# Hardcode data for the Staten Island Railway (SI)
+si_stations_ordered = {
+    "S09": "Tottenville",
+    "S11": "Arthur Kill",
+    "S13": "Richmond Valley",
+    "S14": "Pleasant Plains",
+    "S15": "Prince's Bay",
+    "S16": "Huguenot",
+    "S17": "Annadale",
+    "S18": "Eltingville",
+    "S19": "Great Kills",
+    "S20": "Bay Terrace",
+    "S21": "Oakwood Heights",
+    "S22": "New Dorp",
+    "S23": "Grant City",
+    "S24": "Jefferson Av",
+    "S25": "Dongan Hills",
+    "S26": "Old Town",
+    "S27": "Grasmere",
+    "S28": "Clifton",
+    "S29": "Stapleton",
+    "S30": "Tompkinsville",
+    "S31": "St George",
+}
+
+# Reverse the dictionary order as requested
+reversed_si_stations = dict(reversed(list(si_stations_ordered.items())))
+
+# Add the SI line data to the main dictionary
+all_lines_data["SI"] = {
+    "Staten Island Railway": reversed_si_stations
+}
 
 print("\n--- All data collected ---")
 # Pretty-print the final dictionary
-print(json.dumps(all_lines_data, indent=2))
+# print(json.dumps(all_lines_data, indent=2))
 # Save the data to a JSON file
 with open("mta_subway_stations.json", "w") as json_file:
     json.dump(all_lines_data, json_file, indent=2)
