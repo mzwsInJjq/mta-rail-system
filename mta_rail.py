@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import argparse
 import requests
 from dataclasses import dataclass
@@ -165,7 +166,9 @@ class TrainGetter():
     def __init__(self) -> None:
 
         # Load station data from mta_subway_stations.json (as OrderedDict)
-        with open("mta_subway_stations.json", "r") as f:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(script_dir, "mta_subway_stations.json")
+        with open(json_path, "r") as f:
             station_data = json.load(f, object_pairs_hook=OrderedDict)
         
         # Load mappings for the specified route
