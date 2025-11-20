@@ -314,7 +314,7 @@ class TrainGetter():
             secondary_sort = train.time_until
 
             # Invert secondary sort based on direction to maintain order within a block
-            secondary_sort *= (1 if is_to_endpoint else 0)
+            secondary_sort *= (1 if is_to_endpoint else -1)
 
             return (primary_sort, secondary_sort)
 
