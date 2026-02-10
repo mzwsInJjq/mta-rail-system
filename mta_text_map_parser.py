@@ -84,7 +84,10 @@ for page_url in processed_urls:
                     # Clean up the text to remove hidden characters
                     station_name = station_cell.text.strip()
                     if station_name:
-                        gtfs_stop_id = stations_df[stations_df['Stop Name'] == station_name]['GTFS Stop ID'].values
+                        mask = (stations_df['Stop Name'] == station_name) & \
+       (stations_df['Daytime Routes'].str.contains(train_line, na=False))
+
+                        gtfs_stop_id = stations_df[mask]['GTFS Stop ID'].values
                         if not gtfs_stop_id.size > 0:
                             # Try partial match if exact match not found
                             gtfs_stop_id = stations_df[stations_df['Stop Name'].str.contains(station_name, na=False)]['GTFS Stop ID'].values
