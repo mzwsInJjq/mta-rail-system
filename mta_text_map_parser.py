@@ -106,7 +106,7 @@ for page_url in processed_urls:
                             if 'Eastern' not in alt_name and not alt_name.endswith(' East'):
                                 alt_name = alt_name.replace('East', 'E')
                             alt_name = alt_name.replace("E 143 St-Mary's St", "E 143 St-St Mary's St")
-                            alt_name = alt_name.replace('Bleeker St', 'Bleecker St') # Possible typo
+                            # alt_name = alt_name.replace('Bleeker St', 'Bleecker St')
                             alt_name = alt_name.replace('St/Port', 'St-Port')
                             alt_name = alt_name.replace('Washington Sq', 'Wash Sq')
                             alt_name = alt_name.replace('Boulevard', 'Blvd')
