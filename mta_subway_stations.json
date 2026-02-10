@@ -267,7 +267,7 @@
       "R19": "23 St",
       "R20": "14 St-Union Sq",
       "636": "Astor Pl",
-      "637": "Bleeker St",
+      "637": "Bleecker St",
       "A33": "Spring St",
       "R23": "Canal St",
       "640": "Brooklyn Bridge-City Hall"
@@ -530,12 +530,12 @@
       "F07": "75 Av",
       "G08": "Forest Hills-71 Av",
       "G14": "Jackson Hts-Roosevelt Av",
-      "B04": "21 St-Queensbridge"
+      "G21": "Queens Plaza",
+      "F09": "Court Sq-23 St"
     },
     "Manhattan stations": {
-      "B06": "Roosevelt Island",
-      "B08": "Lexington Av/63 St",
-      "B10": "57 St",
+      "F11": "Lexington Av/53 St",
+      "F12": "5 Av/53 St",
       "D15": "47-50 Sts Rockefeller Ctr",
       "D16": "42 St-Bryant Pk",
       "R17": "34 St-Herald Sq",
@@ -681,12 +681,12 @@
       "G18": "46 St",
       "G19": "Steinway St",
       "R36": "36 St",
-      "G21": "Queens Plaza",
-      "F09": "Court Sq-23 St"
+      "B04": "21 St-Queensbridge"
     },
     "Manhattan stations": {
-      "F11": "Lexington Av/53 St",
-      "F12": "5 Av/53 St",
+      "B06": "Roosevelt Island",
+      "B08": "Lexington Av/63 St",
+      "B10": "57 St",
       "D15": "47-50 Sts-Rockefeller Ctr",
       "D16": "42 St-Bryant Pk",
       "R17": "34 St-Herald Sq",
