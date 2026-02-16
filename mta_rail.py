@@ -309,6 +309,7 @@ class TrainGetter():
             
             # Primary sort: station index.
             primary_sort = train.next_station_index - is_to_endpoint
+            primary_sort *= -1
 
             # Secondary sort: time_until within the same station index block
             secondary_sort = train.time_until
