@@ -12,7 +12,7 @@
       "109": "Dyckman St",
       "110": "191 St",
       "111": "181 St",
-      "A09": "168 St",
+      "112": "168 St",
       "113": "157 St",
       "114": "145 St",
       "115": "137 St-City College",
@@ -110,7 +110,7 @@
       "227": "110 St-Malcolm X Plaza",
       "120": "96 St",
       "123": "72 St",
-      "R16": "Times Square-42 St",
+      "127": "Times Square-42 St",
       "128": "34 St-Penn Station",
       "132": "14 St",
       "137": "Chambers St",
@@ -264,7 +264,7 @@
       "631": "Grand Central-42 St",
       "632": "33 St",
       "633": "28 St",
-      "R19": "23 St",
+      "634": "23 St",
       "635": "14 St-Union Sq",
       "636": "Astor Pl",
       "637": "Bleecker St",
@@ -385,7 +385,7 @@
       "D15": "47-50 Sts-Rockefeller Ctr",
       "D16": "42 St-Bryant Park",
       "D17": "34 St-Herald Sq",
-      "A32": "W 4 St-Washington Sq",
+      "D20": "W 4 St-Washington Sq",
       "D21": "Broadway-Lafayette St",
       "D22": "Grand St"
     },
@@ -469,7 +469,7 @@
       "D15": "47-50 Sts-Rockefeller Ctr",
       "D16": "42 St-Bryant Pk",
       "D17": "34 St-Herald Sq",
-      "A32": "W 4 St-Washington Sq",
+      "D20": "W 4 St-Washington Sq",
       "D21": "Broadway-Lafayette St",
       "D22": "Grand St"
     },
@@ -541,7 +541,7 @@
       "D17": "34 St-Herald Sq",
       "D18": "23 St",
       "D19": "14 St",
-      "A32": "W 4 St-Washington Sq",
+      "D20": "W 4 St-Washington Sq",
       "D21": "Broadway-Lafayette St",
       "F14": "2 Av",
       "F15": "Delancey St-Essex St",
@@ -592,7 +592,7 @@
       "F20": "Bergen St",
       "F21": "Carroll St",
       "F22": "Smith-9 Sts",
-      "R33": "4 Av-9 Sts",
+      "F23": "4 Av-9 Sts",
       "F24": "7 Av",
       "F25": "15 St-Prospect Park",
       "F26": "Fort Hamilton Pkwy",
@@ -692,7 +692,7 @@
       "D17": "34 St-Herald Sq",
       "D18": "23 St",
       "D19": "14 St",
-      "A32": "W 4 St-Washington Sq",
+      "D20": "W 4 St-Washington Sq",
       "D21": "Broadway-Lafayette St",
       "M18": "Delancey St-Essex St"
     },
@@ -766,7 +766,7 @@
       "D26": "Prospect Park",
       "D27": "Parkside Av",
       "D28": "Church Av",
-      "245": "Beverly Rd",
+      "D29": "Beverly Rd",
       "D30": "Cortelyou Rd",
       "D31": "Newkirk Plaza",
       "D32": "Avenue H",
@@ -842,7 +842,7 @@
     },
     "Franklin Shuttle (Brooklyn)": {
       "S01": "Franklin Av",
-      "228": "Park Place",
+      "S03": "Park Place",
       "S04": "Botanic Garden",
       "D26": "Prospect Park"
     },
@@ -913,7 +913,7 @@
     }
   },
   "SI": {
-    "Staten Island Railway": {
+    "Staten Island stations": {
       "S31": "St George",
       "S30": "Tompkinsville",
       "S29": "Stapleton",

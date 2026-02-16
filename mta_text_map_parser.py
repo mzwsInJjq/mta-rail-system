@@ -41,63 +41,59 @@ print(f"{len(processed_urls)} Line URLs found and normalized.")
 
 # Visit each link and scrape the station data
 for page_url in processed_urls:
-    session.cookies.clear() # Clear cookies to prevent redirect loops
+    session.cookies.clear() 
     page_response = None
-    for attempt in range(5): # Retry up to 5 times
+    for attempt in range(5):
         try:
             page_response = session.get(page_url)
-            page_response.raise_for_status() # Raise an exception for bad status codes
-            break # If successful, exit the retry loop
+            page_response.raise_for_status()
+            break
         except requests.exceptions.RequestException as e:
             print(f"Attempt {attempt + 1} failed for {page_url}: {e}")
             if attempt < 4:
-                time.sleep(1) # Wait 1 second before retrying
+                time.sleep(1)
             else:
                 print(f"Could not process {page_url} after 5 attempts.")
     
     if not page_response or not page_response.ok:
-        continue # Skip to the next link if all retries failed
+        continue
 
     page_soup = BeautifulSoup(page_response.content, "html.parser")
     
-    # Extract the train line name from the URL for the dictionary key
-    train_line = page_url.split('/')[-1][0].upper()
-    print(f"--- Scraping {train_line} Line---")
+    # Extract the train line name (e.g., '6' or '6X')
+    train_line = page_url.split('/')[-1].upper()
+    train_line = train_line.replace('-LINE', '').strip()
+
+    # Create lookup for CSV: '6X' -> '6', '7X' -> '7'
+    lookup_line = train_line[:-1] if 'X' in train_line else train_line
+    
+    print(f"--- Scraping {train_line} Line ---")
     all_lines_data[train_line] = {}
 
-    # Find all divs that contain a table
     table_sections = page_soup.select('div.mta-table')
 
     for section in table_sections:
-        # Get the title of the table section
         title_element = section.find('h2')
         if title_element:
             title = title_element.text.strip()
             stations = {}
 
-            # Find all rows in the table body
             rows = section.select('tbody tr')
             for row in rows:
-                # The station name is in the first cell (td) of the row
                 station_cell = row.find('td')
                 if station_cell:
-                    # Clean up the text to remove hidden characters
                     station_name = station_cell.text.strip()
                     if station_name:
+                        # --- STEP 1: Exact Match + Route Filter ---
                         mask = (stations_df['Stop Name'] == station_name) & \
-       (stations_df['Daytime Routes'].str.contains(train_line, na=False))
-
+                               (stations_df['Daytime Routes'].str.contains(lookup_line, na=False))
                         gtfs_stop_id = stations_df[mask]['GTFS Stop ID'].values
+
+                        # --- STEP 2: If failed, try Transformations + Route Filter ---
                         if not gtfs_stop_id.size > 0:
-                            # Try partial match if exact match not found
-                            gtfs_stop_id = stations_df[stations_df['Stop Name'].str.contains(station_name, na=False)]['GTFS Stop ID'].values
-                        if not gtfs_stop_id.size > 0:
-                            # Apply all transformations to a copy of the name
                             alt_name = station_name
-                            alt_name = alt_name.replace('Square', 'Sq')
-                            alt_name = alt_name.replace('Parkway', 'Pkwy')
-                            alt_name = alt_name.replace('Heights', 'Hts')
-                            alt_name = alt_name.replace('Ave', 'Av')
+                            alt_name = alt_name.replace('Square', 'Sq').replace('Parkway', 'Pkwy')
+                            alt_name = alt_name.replace('Heights', 'Hts').replace('Ave', 'Av')
                             if 'Pkwy' not in alt_name:
                                 alt_name = alt_name.replace('Pk', 'Park')
                             if 'Northern' not in alt_name:
@@ -109,32 +105,40 @@ for page_url in processed_urls:
                             if 'Eastern' not in alt_name and not alt_name.endswith(' East'):
                                 alt_name = alt_name.replace('East', 'E')
                             alt_name = alt_name.replace("E 143 St-Mary's St", "E 143 St-St Mary's St")
-                            # alt_name = alt_name.replace('Bleeker St', 'Bleecker St')
-                            alt_name = alt_name.replace('St/Port', 'St-Port')
-                            alt_name = alt_name.replace('Washington Sq', 'Wash Sq')
-                            alt_name = alt_name.replace('Boulevard', 'Blvd')
-                            alt_name = alt_name.replace('Bryant Park', 'Bryant Pk')
-                            alt_name = alt_name.replace('4-', '4 St-')
-                            alt_name = alt_name.replace('Bay-50', 'Bay 50')
+                            alt_name = alt_name.replace('St/Port', 'St-Port').replace('Washington Sq', 'Wash Sq')
+                            alt_name = alt_name.replace('Boulevard', 'Blvd').replace('Bryant Park', 'Bryant Pk')
+                            alt_name = alt_name.replace('4-', '4 St-').replace('Bay-50', 'Bay 50')
                             alt_name = alt_name.replace('Sts Rockefeller', 'Sts-Rockefeller')
                             alt_name = alt_name.replace('Myrtle Willoughby', 'Myrtle-Willoughby')
                             alt_name = alt_name.replace('4 Av-9 Sts', '4 Av-9 St')
                             alt_name = alt_name.replace('Astoria Ditmars Blvd', 'Astoria-Ditmars Blvd')
                             alt_name = alt_name.replace('57-7 Av', '57 St-7 Av')
                             alt_name = alt_name.replace('Delancey St Essex St', 'Delancey St-Essex St')
-                            
-                            # Search with the fully transformed name
-                            gtfs_stop_id = stations_df[stations_df['Stop Name'] == alt_name]['GTFS Stop ID'].values
+                            alt_name = alt_name.replace('Beverly Rd', 'Beverley Rd')
+                            alt_name = alt_name.replace('Park Place', 'Park Pl')
 
+                            alt_mask = (stations_df['Stop Name'] == alt_name) & \
+                                       (stations_df['Daytime Routes'].str.contains(lookup_line, na=False))
+                            gtfs_stop_id = stations_df[alt_mask]['GTFS Stop ID'].values
+
+                        # --- STEP 3: If still failed, try Partial Match + Route Filter ---
+                        if not gtfs_stop_id.size > 0:
+                            partial_mask = (stations_df['Stop Name'].str.contains(station_name, na=False)) & \
+                                           (stations_df['Daytime Routes'].str.contains(lookup_line, na=False))
+                            gtfs_stop_id = stations_df[partial_mask]['GTFS Stop ID'].values
+
+                        # --- STEP 4: Final Assignment ---
                         if gtfs_stop_id.size > 0:
+                            # Use index 0. Because of our route filter, this is safe.
                             stations[gtfs_stop_id[0]] = station_name
                         else:
-                            raise ValueError(f"Station '{station_name}' / '{alt_name}' not found in CSV data.")
+                            # Only raise error if ALL three methods above found nothing
+                            raise ValueError(f"Station '{station_name}' for line {train_line} not found in CSV.")
 
             if title and stations:
                 all_lines_data[train_line][title] = stations
 
-# Hardcode data for the Staten Island Railway (SI)
+# Hardcode data for the Staten Island Railway (SIR)
 si_stations_ordered = {
     "S09": "Tottenville",
     "S11": "Arthur Kill",
@@ -164,8 +168,9 @@ reversed_si_stations = dict(reversed(list(si_stations_ordered.items())))
 
 # Add the SI line data to the main dictionary
 all_lines_data["SI"] = {
-    "Staten Island Railway": reversed_si_stations
+    "Staten Island stations": reversed_si_stations
 }
+print("--- Adding SIR Line ---")
 
 print("\n--- All data collected ---")
 # Pretty-print the final dictionary
